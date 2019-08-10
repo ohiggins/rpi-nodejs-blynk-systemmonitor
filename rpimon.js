@@ -41,7 +41,10 @@ v9.on('read', function() {
 
 term.on('write', function(data) {
   if(data=='temp'){
-    term.write('65' + '\n');
+    //term.write('65' + '\n');
+    si.cpuTemperature(function(data) {
+        term.write('CPU Temperature: ' + data.main+ '\n');
+    })
   }
   //term.write('You wrote:' + data + '\n');
   //term.write('You wrote1:' + data + '\n');
@@ -50,10 +53,21 @@ term.on('write', function(data) {
   //console.log(data[0]);
 });
 
-// var minutes = 0.5, the_interval = minutes * 60 * 1000;
-// setInterval(function() {
-//   console.log("I am doing my 5 minutes check");
-//   term.write("I am doing my 1 minutes check"+ '\n');
-//   // do your stuff here
-// }, the_interval);
+var minutes = 0.5, the_interval = minutes * 60 * 1000;
+setInterval(function() {
+  //var xtemp;
+  si.cpuTemperature(function(data) {
+    //xtemp=data.main;
+    //console.log(typeof(data.main));
+    term.write('CPU Temperature: ' + data.main+ '\n');
+    if(data.main>55){
+      blynk.notify('CPU Temp warning. Current temp is: ' + data.main);
+    }
+  })
+
+  console.log("I am doing my check");
+  //blynk.notify('CPU Temp warning. Current temp is: ' + xtemp);
+  //term.write("I am doing my 1 minutes check"+ '\n');
+  // do your stuff here
+}, the_interval);
 // //S9743595211
